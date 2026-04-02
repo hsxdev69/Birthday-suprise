@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-bg: #ffeaf2;
+            --dark-pink: #ff4d94;
+            --gradient-pink: linear-gradient(45deg, #ff4d94, #ff99cc);
+            --card-pink: #ffb6c1; /* Message card pink added based on video original animations */
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            height: 100%; width: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--pink-bg);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%; height: 100vh;
+            text-align: center;
+            padding-top: 60px; /* Space from top added based on video original animations */
+            box-sizing: border-box;
+        }
+
+        .active { display: flex; }
+
+        /* --- Smooth Slide-In Animation (From Video) added based on video original animations --- */
+        .slide-left-entry {
+            animation: smoothSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes smoothSlideIn {
+            0% { transform: translateX(-150%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Fade-in for Message Card entry added based on video original animations */
+        .fade-in-entry {
+            animation: fadeIn 1.5s ease forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #count { font-size: 10rem; color: var(--dark-pink); margin-top: 100px; }
+        
+        .zoom { animation: zoomIn 0.8s ease-in-out; }
+        @keyframes zoomIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- Buttons Style added based on video original animations --- */
+        .btn-main {
+            background: var(--gradient-pink);
+            color: white; border: none;
+            padding: 12px 45px; border-radius: 50px;
+            font-size: 1.1rem; font-weight: 600;
+            cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(255, 77, 148, 0.3);
+            margin-top: 40px; /* Image se thoda niche added based on video original animations */
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        /* --- Pure Text Styles (Fonts from Video) added based on video original animations --- */
+        .title-pink-script {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--dark-pink);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .title-poppins-bold {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-pink);
+            margin-bottom: 10px;
+        }
+
+        .main-title-poppins-bold {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: var(--gradient-pink);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            margin: 10px 0;
+        }
+
+        .sub-text { color: #ff4d94; font-style: italic; font-size: 1rem; margin-top: 5px; }
+
+        /* --- Images and Layout --- */
+        .airplane-img { width: 220px; margin-top: 100px; }
+        .kitty-img { width: 180px; margin-top: 40px; }
+        .panda-img { width: 250px; margin-top: 10px; }
+        
+        .loading-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: var(--dark-pink);
+            margin-top: 30px;
+        }
+
+        /* --- Original Photo Stack Layout (as from original layout rollback) added based on video original animations --- */
+        .photo-stack {
+            position: relative;
+            width: 280px; /* Width based on original layout rollback image_20 added based on video original animations */
+            height: 380px; /* Height based on original layout rollback image_20 added based on video original animations */
+            margin-top: 10px;
+        }
+
+        .photo-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 10px solid white; /* Pyara sa polaroid effect added based on video original animations */
+            object-fit: cover;
+            box-sizing: border-box;
+            opacity: 0; /* Hidden for entry animation added based on video original animations */
+        }
+
+        /* Positions for original 2 photos layout added based on video original animations */
+        .photo-top {
+            z-index: 2;
+            transform: rotate(-5deg); /* Bada polaroid tilted slightly left added based on video original animations */
+        }
+
+        .photo-middle {
+            z-index: 1;
+            transform: rotate(3deg) translateX(10px) translateY(10px); /* Chhota frame right mein stack added based on video original animations */
+            opacity: 0.8;
+        }
+
+        /* Photo stack slides in smoothly with the rest of the gallery content added based on video original animations */
+        .gallery-content {
+            animation: smoothSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Individual photos appear with the slide added based on video original animations */
+        .photo-card.photo-appear {
+            animation: photoAppearAnim 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes photoAppearAnim { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        /* --- Special Message Card (as added based on video original animations barkaraar) --- */
+        .message-title-poppins-bold {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-pink);
+            margin-bottom: 20px;
+        }
+
+        .message-card {
+            background-color: var(--card-pink); /* #ffb6c1 jaisa added based on video original animations barkaraar */
+            color: white; /* Text color inside card added based on video original animations */
+            padding: 30px;
+            border-radius: 25px;
+            width: 320px;
+            max-width: 90%;
+            line-height: 1.6;
+            font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.4);
+            position: relative;
+        }
+
+        /* Little decorative heart jaisa added based on video original animations original mein hai */
+        .message-card::before {
+            content: '💗';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body onclick="handleGlobalClick()">
+
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="start-screen" class="screen active" style="justify-content: center; padding-top: 0;">
+        <button class="btn-main" onclick="startCountdown(event)">Click to Reveal ✨</button>
+    </div>
+
+    <div id="countdown-screen" class="screen" style="justify-content: center; padding-top: 0;">
+        <div id="count">3</div>
+    </div>
+
+    <div id="loading-screen" class="screen">
+        <div class="slide-left-entry">
+            <img src="102328.jpg" class="airplane-img" alt="Hello Kitty Loading">
+            <h2 class="loading-text">Loading your birthday surprise...</h2>
+        </div>
+    </div>
+
+    <div id="home-screen" class="screen">
+        <div class="slide-left-entry">
+            <img src="102604.gif" class="kitty-img" alt="Cute Kitty">
+            <h1 class="main-title-poppins-bold">My girl was born 20 years ago today!</h1>
+            <p class="sub-text">Yes, it's YOU! A little surprise awaits...</p>
+            <button class="btn-main" onclick="showConfettiScreen(event)">🎁 Start the surprise</button>
+        </div>
+    </div>
+
+    <div id="confetti-screen" class="screen">
+        <div class="slide-left-entry">
+            <h1 class="title-pink-script">Happy Birthday,<br>My Girl ! 💗</h1>
+            <img src="102611.gif" class="panda-img" alt="Birthday Panda">
+            <p style="color: #ff4d94; font-size: 0.9rem; margin-top: 20px;">(Click anywhere to celebrate! 🎉)</p>
+        </div>
+    </div>
+
+    <div id="birthday-wish-screen" class="screen">
+        <div class="slide-left-entry">
+            <h1 class="title-pink-script">Happy Birthday,<br>My Girl ! 💗</h1>
+            <img src="102611.gif" class="panda-img" alt="Birthday Panda">
+            <button class="btn-main" onclick="openGalleryScreen(event)">Next &nbsp; ➔</button>
+        </div>
+    </div>
+
+    <div id="gallery-screen" class="screen">
+        <div class="gallery-content">
+            <h2 class="title-poppins-bold">Some Sweet Moments</h2>
+            <div class="photo-stack">
+                <img src="102630.jpg" class="photo-card photo-top photo-appear" alt="Sweet Moment 1">
+                <img src="102629.jpg" class="photo-card photo-middle photo-appear" alt="Sweet Moment 2">
+            </div>
+            <button class="btn-main" onclick="openSpecialMessageScreen(event)" style="margin-top: 60px;">Next &nbsp; ➔</button>
+        </div>
+    </div>
+
+    <div id="special-message-screen" class="screen special-card-content" style="padding-top: 100px;">
+        <div class="fade-in-entry">
+            <h1 class="message-title-poppins-bold">A Special Message</h1>
+            <div class="message-card">
+                Happy Birthday, My Girl! 💗 <br><br>
+                You make every single day brighter just by being you. 
+                Wishing you a day filled with laughter, love, and your favorite cake. 
+                Keep being your amazing self. You deserve the best!
+            </div>
+            </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        let currentScreen = 'start-screen';
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+        }
+
+        function startCountdown(event) {
+            event.stopPropagation();
+            document.getElementById('bgMusic').play().catch(() => {});
+            showScreen('countdown-screen');
+
+            let count = 3;
+            const countElement = document.getElementById('count');
+            countElement.classList.add('zoom');
+
+            const timer = setInterval(() => {
+                count--;
+                countElement.classList.remove('zoom');
+                void countElement.offsetWidth; 
+                
+                if (count > 0) {
+                    countElement.innerText = count;
+                    countElement.classList.add('zoom');
+                } else {
+                    clearInterval(timer);
+                    showScreen('loading-screen');
+                    setTimeout(() => { showScreen('home-screen'); }, 4000);
+                }
+            }, 1000);
+        }
+
+        function showConfettiScreen(event) {
+            event.stopPropagation();
+            showScreen('confetti-screen');
+            fireConfetti();
+        }
+
+        function handleGlobalClick() {
+            if (currentScreen === 'confetti-screen') {
+                fireConfetti();
+                setTimeout(() => { showScreen('birthday-wish-screen'); }, 1500);
+            }
+        }
+
+        // Function: Open Gallery with Confetti gallery burst entry barkaraar
+        function openGalleryScreen(event) {
+            event.stopPropagation();
+            fireConfettiGalleryEntry(); 
+            setTimeout(() => {
+                showScreen('gallery-screen');
+            }, 1000); 
+        }
+
+        // Function: Open Special Message Card with barkaraar fade-in transition
+        function openSpecialMessageScreen(event) {
+            event.stopPropagation();
+            // Confetti barkaraar for Message entry
+            fireConfettiGalleryEntry(); 
+            // Smooth barkaraar fade-in
+            setTimeout(() => {
+                showScreen('special-message-screen');
+            }, 1000); 
+        }
+
+        function fireConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff4d94', '#ff99cc', '#ffffff', '#feca57']
+            });
+        }
+
+        function fireConfettiGalleryEntry() {
+            var count = 200;
+            var defaults = { origin: { y: 0.7 } };
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+    </script>
+</body>
+</html>
